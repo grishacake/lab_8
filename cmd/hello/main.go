@@ -12,11 +12,10 @@ import (
 )
 
 const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "postgres"
-	dbname   = "sandbox"
+	host   = "localhost"
+	port   = 5432
+	user   = "grishka"
+	dbname = "lab_8"
 )
 
 type Handlers struct {
@@ -46,10 +45,8 @@ func (h *Handlers) PostHello(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&input)
 	if err != nil {
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(err.Error()))
-		}
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 	}
 
 	err = h.dbProvider.InsertHello(input.Msg)
@@ -90,8 +87,8 @@ func main() {
 
 	// Формирование строки подключения для postgres
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+		"dbname=%s sslmode=disable",
+		host, port, user, dbname)
 
 	// Создание соединения с сервером postgres
 	db, err := sql.Open("postgres", psqlInfo)
